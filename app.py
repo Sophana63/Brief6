@@ -71,26 +71,28 @@ row = html.Div(
     [
         dbc.Row(dbc.Col(html.Iframe(
                     id='medal_per_participation',
-                    style={'border-width': '0', 'width': '100%', 'height': '600px'}
-                    ),)),
+                    style={'border-width': '0', 'width': '100%', 'height': '450px'}
+                    ),
+                    width={"size": 6, "offset": 3},
+                    className="border rounded")),
         dbc.Row(
             [
                 dbc.Col(html.Iframe(
                     id='dd-output-container',
                     style={'border-width': '0', 'width': '100%', 'height': '600px'}
-                    ),),
+                    ),
+                    md=6),
                 dbc.Col(html.Iframe(
                     id='10best_athlete',
                     style={'border-width': '0', 'width': '100%', 'height': '600px'}
-                    ),),
-                
+                    ),
+                    md=6),                
             ]
         ),
     ]
 )
 app.layout = html.Div(
-    [logo,row], 
-    
+    [logo,row],     
 )
 
 
@@ -101,7 +103,6 @@ def toggle_navbar_collapse(n, n_clicks):
         
         return not n_clicks
     return n_clicks
-
 
 # the same function (toggle_navbar_collapse) is used in all three callbacks
 ### Nombre de médailles gagnées par édition
@@ -125,7 +126,7 @@ def update_output(value):
 
     lines = alt.Chart(source).mark_line(point=True, color="blue").encode(
         alt.X('Année'),
-        alt.Y('Médailles',scale=alt.Scale(domain=(0,200)))).properties(
+        alt.Y('Médailles')).properties(
         title="Nombre de médailles gagnées par édition",width=600,height=500)
 
     text = lines.mark_text(
@@ -139,7 +140,7 @@ def update_output(value):
 
     return lines.to_html()
 
-### Diagramme des 10 meilleurs athlètes
+### Diagramme des 20 meilleurs athlètes
 @app.callback(
     Output('10best_athlete', 'srcDoc'),
     Input('demo-dropdown', 'value')
@@ -147,13 +148,16 @@ def update_output(value):
 def update_output(value):
     df = df_medal.merge(df_host, left_on='slug_game', right_on='game_slug')
     df = df[(df.game_season == 'Summer') & (df.country_3_letter_code == value)]
-    df_medal_by_athlete = df.groupby(['athlete_full_name'])['medal_type'].count().nlargest(10).reset_index(name="count")
+    df_medal_by_athlete = df.groupby(['athlete_full_name'])['medal_type'].count().nlargest(20).reset_index(name="count")
     
     source = df_medal_by_athlete.from_records({
         'Athlète': df_medal_by_athlete['athlete_full_name'],
         'Médailles': df_medal_by_athlete['count']
     })
-    chart4 = alt.Chart(source).mark_bar().encode(x='Athlète',y='Médailles')
+    chart4 = alt.Chart(source).mark_bar().encode(
+        alt.X('Athlète', sort=None),
+        alt.Y('Médailles')).properties(
+        title="Diagramme des 20 meilleurs athlètes")
     return chart4.to_html()
 
 ### Change le titre par les 3 lettres du pays
@@ -175,20 +179,21 @@ def update_output(value):
     nuage = df_gbr.groupby(['game_year', 'slug_game'])['country_3_letter_code', 'medal_type'].count()
     nuage.sort_values(by=['game_year'], inplace=True)
     nuage = nuage.reset_index()
-    print(nuage)
+    
     source = nuage.from_records({
         'Participants': nuage['country_3_letter_code'],
         'Médailles': nuage['medal_type'],
-        'JO': nuage['slug_game']
+        'JO': nuage["slug_game"],        
     })
 
     bar = alt.Chart(source).mark_bar().encode(
-        x='JO',
+        alt.X('JO', sort=None),
         y='Participants:Q'
-    )
+    ).properties(
+        title="Nombre de médailles par participation pour toutes les éditions")
 
     bar2 = alt.Chart(source).mark_bar(color='green').encode(
-        x='JO',
+        alt.X('JO', sort=None),
         y='Médailles:Q'
     )
 
@@ -198,7 +203,7 @@ def update_output(value):
         # The number of values before and after the current value to include.
         frame=[-9, 0]
     ).encode(
-        alt.X('JO', title = 'Edition JO', axis = alt.Axis(labelAngle = -45, labelOverlap = False)),
+        alt.X('JO', title = 'Edition JO', axis = alt.Axis(labelAngle = -45, labelOverlap = False), sort=None),
         y='rolling_mean:Q'
     )
 
