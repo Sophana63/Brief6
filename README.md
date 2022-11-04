@@ -17,3 +17,10 @@ Installation de Dash:
 pip install dash
 ```
 Pour visualiser le dashboard, il faudra lancer le fichier app.py
+
+## Partie 2 : Dashboard (Rémi)
+
+Pour le dashboard individuel de Rémi, voici le lien de son Git: 
+[Dashboard de Rémi](https://github.com/rpdev63/dashboard_jo)
+
+Il faudra aussi installer la librairie dash.
