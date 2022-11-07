@@ -1,6 +1,6 @@
 # Brief6 - Dessine-moi les JO
 
-Le brief a été réalisé par Rémi et Sophana et codé sur Notebook Jupyter. Nous avons du produire des graphiques sur la Grande-Bretagne.
+Le brief a été réalisé par Rémi et Sophana et codé sur Notebook Jupyter. Nous avons du produire des graphiques sur la Grande-Bretagne avec la librairie Altair.
 
 ## Partie 1 : Réalisation des visuels
 
@@ -11,7 +11,7 @@ Le brief a été réalisé par Rémi et Sophana et codé sur Notebook Jupyter. N
 
 ## Partie 2 : Dashboard (Sophana)
 
-J'ai réalisé un dashboard individuel avec l'IDE VS Code. J'ai utilisé la librairie Dash pour le concevoir.
+J'ai réalisé un dashboard individuel avec l'IDE VS Code. J'ai utilisé la librairie Dash pour le concevoir et Altair pour les graphiques.
 Installation de Dash:
 ```
 pip install dash
